@@ -2,8 +2,6 @@ using UnityEngine;
 using TMPro;
 using Photon.Pun;
 using UnityEngine.UI;
-using Photon.Pun.Demo.Cockpit;
-using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class MainManager : MonoBehaviourPunCallbacks

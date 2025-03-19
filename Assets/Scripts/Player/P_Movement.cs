@@ -27,10 +27,10 @@ public class P_Movement : MonoBehaviourPunCallbacks
             }
             if(moveDirection.x >= 1)
             {
-                playerTransform.rotation = Quaternion.Euler(0,0,0);
+                playerTransform.rotation = Quaternion.Euler(0,90,0);
             }else if(moveDirection.x <= -1 )
             {
-                playerTransform.rotation = Quaternion.Euler(0, 180, 0);
+                playerTransform.rotation = Quaternion.Euler(0, 270, 0);
             }
         }
     }
