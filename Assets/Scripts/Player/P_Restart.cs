@@ -7,8 +7,8 @@ public class P_Restart : MonoBehaviour
 
     private void OnEnable()
     {
-        EventManager.OnPlayerCollisionWithObstacle += RestartPlayer;
         player = this.gameObject;
+        EventManager.OnPlayerCollisionWithObstacle += RestartPlayer;
     }
     private void OnDisable()
     {

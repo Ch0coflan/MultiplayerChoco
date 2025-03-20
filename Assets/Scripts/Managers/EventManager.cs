@@ -2,17 +2,29 @@ using ExitGames.Client.Photon;
 using System;
 using UnityEngine;
 
-public static class EventManager 
+public class EventManager : MonoBehaviour
 {
-        public static event Action OnPlayerCollisionWithObstacle;
+    public static EventManager Instance;    
+    public static event Action OnPlayerCollisionWithObstacle;
     public static event Action OnPlayerWin;
-        public static void TriggerPlayerCollision()
+
+    private void Awake()
+    {
+        if (Instance != null)
         {
-            OnPlayerCollisionWithObstacle?.Invoke();  
+            Destroy(gameObject);
+        }else
+        {
+            Instance = this;
         }
+    }
+    public static void TriggerPlayerCollision()
+    {
+        OnPlayerCollisionWithObstacle?.Invoke();
+    }
 
     public static void TriggerPlayerWin()
     {
-
+        OnPlayerWin?.Invoke();
     }
 }

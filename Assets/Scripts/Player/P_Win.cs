@@ -2,11 +2,18 @@ using UnityEngine;
 
 public class P_Win : MonoBehaviour
 {
-    private void OnTriggerEnter(Collider other)
+    private void OnEnable()
     {
-        if(other.gameObject.CompareTag("Player"))
-        {
+        EventManager.OnPlayerWin += PlayerWin;
+    }
 
-        }
+    private void OnDisable()
+    {
+        EventManager.OnPlayerWin -= PlayerWin;
+    }
+
+    private void PlayerWin()
+    {
+
     }
 }

@@ -3,6 +3,7 @@ using TMPro;
 using Photon.Pun;
 using UnityEngine.UI;
 using System.Collections;
+using Photon.Realtime;
 
 public class MainManager : MonoBehaviourPunCallbacks
 {
@@ -12,10 +13,10 @@ public class MainManager : MonoBehaviourPunCallbacks
     public GameObject menuCreateOrJoin;
     public GameObject menuJoin;
     public GameObject menuCreate;
-    public TMP_InputField nickCreateRoomInput;
-    public TMP_InputField nickJoinRoomInput;
-    public TMP_InputField roomNameCreateInput;
-    public TMP_InputField roomNameJoinInput;
+    public TMP_InputField CreateRoomNickname;
+    public TMP_InputField JoinRoomNickname;
+    public TMP_InputField CreateRoomName;
+    public TMP_InputField JoinRoomName;
     public Button playButton;
     public Button joinMenuButton;
     public Button createMenuButton;
@@ -53,11 +54,22 @@ public class MainManager : MonoBehaviourPunCallbacks
         }
     }
 
-    public override void OnJoinRoomFailed(short returnCode, string message)
+    public override void OnCreatedRoom()
     {
-        Debug.LogError("Can't join to the room " + message);
+        base.OnCreatedRoom();
+        multipurposeText.text = "Room created successfully";
+        Debug.Log("Successfully created room: " + PhotonNetwork.CurrentRoom.Name);
+        if (partyManager != null)
+        {
+            partyManager.OnJoinedRoom();
+        }
     }
 
+    public override void OnJoinRoomFailed(short returnCode, string message)
+    {
+        base.OnJoinRoomFailed(returnCode, message);
+        Debug.LogError("Can't join to the room " + message);
+    }
 
     public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
     {
@@ -66,6 +78,16 @@ public class MainManager : MonoBehaviourPunCallbacks
             multipurposeText.text = "There's enough players to start!";
             StartCoroutine(MultipurposeTextCorroutine());
         }
+    }
+
+    public override void OnCreateRoomFailed(short returnCode, string message)
+    {
+        base.OnCreateRoomFailed(returnCode, message);
+        multipurposeText.gameObject.SetActive(true);
+        multipurposeText.text = "Failed to create room. Please try again!";
+        menuCreate.SetActive(true) ;
+        StartCoroutine(MultipurposeTextCorroutine());
+        Debug.Log("Failed to create room" + message);
     }
 
     #endregion
@@ -94,46 +116,50 @@ public class MainManager : MonoBehaviourPunCallbacks
     public void OnJoinRoomButtonClicked()
     {
         multipurposeText.gameObject.SetActive(true);
-        string nickname = nickJoinRoomInput.text;
-        string roomName = roomNameJoinInput.text;
+        string jNickname = JoinRoomNickname.text;
+        string jRoomName = JoinRoomName.text;
 
-        if (string.IsNullOrEmpty(nickname) || string.IsNullOrEmpty(roomName))
+        if (string.IsNullOrEmpty(jNickname) || string.IsNullOrEmpty(jRoomName))
         {
             multipurposeText.text = "Please enter a nickname and a room name!";
             StartCoroutine(MultipurposeTextCorroutine());
             return;
         }
-        else
-        {
-            PhotonNetwork.NickName = nickname;
-            PhotonNetwork.JoinRoom(roomName);
-            multipurposeText.text = "Joining...";
-            StartCoroutine(MultipurposeTextCorroutine());
-            menuJoin.SetActive(false);
-        }
+
+        PhotonNetwork.NickName = jNickname;
+        multipurposeText.text = "Joining...";
+        StartCoroutine(MultipurposeTextCorroutine());
+        menuJoin.SetActive(false);
+        PhotonNetwork.JoinRoom(jRoomName);
     }
+
 
     public void OnCreateRoomButtonClicked()
     {
         multipurposeText.gameObject.SetActive(true);
-        string nickname = nickCreateRoomInput.text;
-        string roomName = roomNameCreateInput.text;
+        string cNickname = CreateRoomNickname.text;
+        string cRoomName = CreateRoomName.text;
 
-        if (string.IsNullOrEmpty(nickname) || string.IsNullOrEmpty(roomName))
+        if (string.IsNullOrEmpty(cNickname) || string.IsNullOrEmpty(cRoomName))
         {
             multipurposeText.text = "Please enter a nickname and a room name!";
             StartCoroutine(MultipurposeTextCorroutine());
             return;
         }
-        else
-        {
-            PhotonNetwork.NickName = nickname;
-            PhotonNetwork.CreateRoom(roomName, new Photon.Realtime.RoomOptions { MaxPlayers = 4 });
-            multipurposeText.text = "Creating and Joining...";
-            StartCoroutine(MultipurposeTextCorroutine());
-            menuCreate.SetActive(false);
-        }
+
+        PhotonNetwork.NickName = cNickname;
+        multipurposeText.text = "Creating and Joining...";
+        StartCoroutine(MultipurposeTextCorroutine());
+        menuCreate.SetActive(false);
+
+        RoomOptions roomOptions = new RoomOptions();
+        roomOptions.MaxPlayers = 4;
+        roomOptions.IsOpen= true;
+        roomOptions.IsVisible= true;
+
+        PhotonNetwork.CreateRoom(cRoomName, roomOptions, TypedLobby.Default);
     }
+            
     #endregion
 
     private IEnumerator MultipurposeTextCorroutine()
