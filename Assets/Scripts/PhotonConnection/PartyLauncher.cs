@@ -50,7 +50,7 @@ public class PartyManager : MonoBehaviourPunCallbacks
             GameObject playerNameObj = Instantiate(playerNamePrefab);
             playerNameObj.transform.SetParent(playerListContainer.transform, false);
 
-            Text playerNameText = playerNameObj.GetComponentInChildren<Text>();
+            TextMeshProUGUI playerNameText = playerNameObj.GetComponentInChildren<TextMeshProUGUI>();
             if(playerNameText != null )
             {
                 playerNameText.text = player.NickName;

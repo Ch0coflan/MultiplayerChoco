@@ -20,6 +20,7 @@ public class MainManager : MonoBehaviourPunCallbacks
     public Button playButton;
     public Button joinMenuButton;
     public Button createMenuButton;
+    public Button backButton;
     public TMP_Text multipurposeText;
    
     #region NetworkMethods
@@ -33,6 +34,7 @@ public class MainManager : MonoBehaviourPunCallbacks
     }
     public override void OnConnectedToMaster()
     {
+        base.OnConnectedToMaster();
         OnJoinedLobby();
         Debug.Log("Conected to server!");
     }
@@ -47,6 +49,7 @@ public class MainManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
+        base.OnJoinedRoom();
         Debug.Log("Joined to room: " + PhotonNetwork.CurrentRoom.Name);
         if (partyManager != null)
         {
@@ -69,15 +72,6 @@ public class MainManager : MonoBehaviourPunCallbacks
     {
         base.OnJoinRoomFailed(returnCode, message);
         Debug.LogError("Can't join to the room " + message);
-    }
-
-    public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
-    {
-        if (PhotonNetwork.CurrentRoom.PlayerCount >= 2)
-        {
-            multipurposeText.text = "There's enough players to start!";
-            StartCoroutine(MultipurposeTextCorroutine());
-        }
     }
 
     public override void OnCreateRoomFailed(short returnCode, string message)
@@ -147,6 +141,8 @@ public class MainManager : MonoBehaviourPunCallbacks
             return;
         }
 
+        Debug.Log("Creando sala con el nombre: " + cRoomName);
+        Debug.Log("El nickname del jugador es: " + cNickname);
         PhotonNetwork.NickName = cNickname;
         multipurposeText.text = "Creating and Joining...";
         StartCoroutine(MultipurposeTextCorroutine());
