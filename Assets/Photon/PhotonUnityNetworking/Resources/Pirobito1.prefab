@@ -138,6 +138,7 @@ GameObject:
   - component: {fileID: 3092593564373565629}
   - component: {fileID: 3370487820370996372}
   - component: {fileID: 7062672590291920114}
+  - component: {fileID: 5224688599041915549}
   m_Layer: 0
   m_Name: Pirobito1
   m_TagString: Player
@@ -303,7 +304,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_SynchronizePosition: 1
   m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
+  m_SynchronizeScale: 1
   m_UseLocal: 1
 --- !u!114 &3370487820370996372
 MonoBehaviour:
@@ -333,6 +334,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startPos: {fileID: 0}
   player: {fileID: 0}
+--- !u!114 &5224688599041915549
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3400211952615987220}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfc863228fb94254980ad31a6b3dad94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3682283915861911426
 GameObject:
   m_ObjectHideFlags: 0

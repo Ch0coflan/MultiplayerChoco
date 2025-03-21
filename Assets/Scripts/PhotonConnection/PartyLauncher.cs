@@ -11,9 +11,11 @@ public class PartyManager : MonoBehaviourPunCallbacks
     public GameObject playerListContainer;
     public TMP_Text nameRoom;
     public Button startButton;
+    private PhotonView photonViews;
  
     private void Start()
     {
+        photonViews = GetComponent<PhotonView>();
         lobby.SetActive(false);
         startButton.interactable = false;
         UpdatePlayerList();
@@ -71,6 +73,20 @@ public class PartyManager : MonoBehaviourPunCallbacks
 
     public void OnStartGameButtonClicked()
     {
+        if(PhotonNetwork.IsMasterClient)
+        {
+            Debug.Log("Iniciando juego");
+            photonViews.RPC("StartGameRPC", RpcTarget.All);
+        }
+        else
+        {
+            Debug.LogWarning("Solo el Master puede iniciar el juego");
+        }
+    }
+
+    [PunRPC]
+    public void StartGameRPC()
+    {
         PhotonNetwork.LoadLevel(1);
     }
 
@@ -79,6 +95,12 @@ public class PartyManager : MonoBehaviourPunCallbacks
         string roomName = PhotonNetwork.CurrentRoom.Name;
         nameRoom.text = roomName;
         Debug.Log("Player has joined to " + roomName);
+    }
+
+    public override void OnMasterClientSwitched(Player newMasterClient)
+    {
+        base.OnMasterClientSwitched(newMasterClient);
+        Debug.Log("Nuevo Master Client: " + newMasterClient.NickName);
     }
 }
 
