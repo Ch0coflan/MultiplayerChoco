@@ -9,11 +9,19 @@ public class P_Movement : MonoBehaviourPunCallbacks
     private Rigidbody _rb;
     private Transform playerTransform; 
     private Vector3 moveDirection;
+    private Vector3 networkPosition;
 
     void Awake()
     {
         _rb = GetComponent<Rigidbody>();
         playerTransform = GetComponent<Transform>();
+    }
+    private void Start()
+    {
+        if(!photonView.IsMine)
+        {
+            GetComponent<P_Movement>().enabled = false;
+        }
     }
     void Update()
     {
