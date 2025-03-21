@@ -20,13 +20,14 @@ public class MainManager : MonoBehaviourPunCallbacks
     public Button playButton;
     public Button joinMenuButton;
     public Button createMenuButton;
-    public Button backButton;
+    public TMP_Text GameTitle;
     public TMP_Text multipurposeText;
-   
+
     #region NetworkMethods
     private void Start()
     {
         menuPanel.SetActive(true);
+        GameTitle.gameObject.SetActive(true);
         menuCreateOrJoin.SetActive(false);
         menuJoin.SetActive(false);
         menuCreate.SetActive(false);
@@ -42,6 +43,7 @@ public class MainManager : MonoBehaviourPunCallbacks
     public override void OnJoinedLobby()
     {
         menuCreateOrJoin.SetActive(true);
+        multipurposeText.text = string.Empty;
         joinMenuButton.gameObject.SetActive(true); joinMenuButton.interactable = true;
         createMenuButton.gameObject.SetActive(true); createMenuButton.interactable = true;
         Debug.Log("Connected to lobby!");
@@ -68,6 +70,13 @@ public class MainManager : MonoBehaviourPunCallbacks
         }
     }
 
+    public override void OnLeftRoom()
+    {
+        base.OnLeftRoom();
+        Debug.Log("Player left the room.");
+        multipurposeText.text = "Has salido de la sala.";  
+    }
+
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
         base.OnJoinRoomFailed(returnCode, message);
@@ -84,27 +93,36 @@ public class MainManager : MonoBehaviourPunCallbacks
         Debug.Log("Failed to create room" + message);
     }
 
+    public override void OnDisconnected(DisconnectCause cause)
+    {
+        base.OnDisconnected(cause);
+        Debug.Log("Desconectado de Photon: " + cause.ToString());
+    }
+
     #endregion
 
     #region ButtonMethods
-    public void JoinButtonMenu()
-    {
-        menuCreateOrJoin.SetActive(false);
-        menuJoin.SetActive(true);
-    }
-
-    public void CreateButtonMenu()
-    {
-        menuCreateOrJoin.SetActive(false);
-        menuCreate.SetActive(true);
-    }
 
     public void OnClickConnect()
     {
         PhotonNetwork.ConnectUsingSettings();
         menuPanel.SetActive(false);
         multipurposeText.gameObject.SetActive(true);
+        multipurposeText.text = "Loading...";
         Debug.Log("Click Connect Done");
+    }
+    public void JoinButtonMenu()
+    {
+        menuCreateOrJoin.SetActive(false);
+        GameTitle.gameObject.SetActive(false);
+        menuJoin.SetActive(true);
+    }
+
+    public void CreateButtonMenu()
+    {
+        menuCreateOrJoin.SetActive(false);
+        GameTitle.gameObject.SetActive(false);
+        menuCreate.SetActive(true);
     }
 
     public void OnJoinRoomButtonClicked()
@@ -155,7 +173,62 @@ public class MainManager : MonoBehaviourPunCallbacks
 
         PhotonNetwork.CreateRoom(cRoomName, roomOptions, TypedLobby.Default);
     }
-            
+
+    #endregion
+
+    #region BackButtonsMethods
+
+    public void OnChoiceRoomOptionBackButtonPressed()
+    {
+        menuCreateOrJoin.SetActive(false);
+        if (PhotonNetwork.IsConnected)
+        {
+            Debug.Log("Desconectando de Photon...");
+            PhotonNetwork.Disconnect();
+        }
+        menuPanel.SetActive(true);
+        GameTitle.gameObject.SetActive(true);
+    }
+
+    public void OnCreateRoomBackButton()
+    {
+        menuCreate.SetActive(false);
+        menuCreateOrJoin.SetActive(true);
+        GameTitle.gameObject.SetActive(true);
+    }
+
+    public void OnJoinRoomBackButton()
+    {
+        menuJoin.SetActive(false);
+        menuCreateOrJoin.SetActive(true);
+        GameTitle.gameObject.SetActive(true);
+    }
+
+    public void LeaveLobbyButton()
+    {
+        PhotonNetwork.LeaveRoom();
+        Debug.Log("Leaving the room...");
+        partyManager.lobby.SetActive(false);
+        menuCreateOrJoin.SetActive(true);
+        GameTitle.gameObject.SetActive(true);
+        multipurposeText.text = "Saliendo de la sala...";
+    }
+    public void ExitGameButton()
+    {
+        if (PhotonNetwork.IsConnected)
+        {
+            Debug.Log("Desconectando de Photon...");
+            PhotonNetwork.Disconnect();
+        }
+        Debug.Log("Cerrando el juego...");
+        Application.Quit();
+
+     #if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#endif
+    }
+
+
     #endregion
 
     private IEnumerator MultipurposeTextCorroutine()

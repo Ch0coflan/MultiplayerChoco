@@ -65,7 +65,7 @@ public class PartyManager : MonoBehaviourPunCallbacks
             startButton.interactable = true;
         }else
         {
-            startButton.interactable=false;
+            startButton.interactable = false;
         }
     }
 
