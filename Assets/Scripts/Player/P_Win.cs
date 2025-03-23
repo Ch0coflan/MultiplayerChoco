@@ -1,19 +1,22 @@
 using UnityEngine;
 
-public class P_Win : MonoBehaviour
+namespace Player
 {
-    private void OnEnable()
+    public class P_Win : MonoBehaviour
     {
-        EventManager.OnPlayerWin += PlayerWin;
-    }
+        private void OnEnable()
+        {
+            EventManager.OnPlayerWin += PlayerWin;
+        }
 
-    private void OnDisable()
-    {
-        EventManager.OnPlayerWin -= PlayerWin;
-    }
+        private void OnDisable()
+        {
+            EventManager.OnPlayerWin -= PlayerWin;
+        }
 
-    private void PlayerWin()
-    {
+        private void PlayerWin()
+        {
 
+        }
     }
 }

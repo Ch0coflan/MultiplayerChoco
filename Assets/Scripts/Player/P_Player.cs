@@ -1,13 +1,15 @@
 using Photon.Pun;
-using UnityEngine;
 
-public class P_Player : MonoBehaviourPunCallbacks
+namespace Player
 {
-    private void Start()
+    public class P_Player : MonoBehaviourPunCallbacks
     {
-        if (!photonView.IsMine)
+        private void Start()
         {
-            Destroy(gameObject);
+            if (!photonView.IsMine)
+            {
+                Destroy(gameObject);
+            }
         }
     }
 }

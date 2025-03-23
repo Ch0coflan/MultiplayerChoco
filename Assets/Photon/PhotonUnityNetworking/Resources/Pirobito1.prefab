@@ -287,6 +287,7 @@ MonoBehaviour:
   observableSearch: 2
   ObservedComponents:
   - {fileID: 3092593564373565629}
+  - {fileID: 3370487820370996372}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -305,7 +306,7 @@ MonoBehaviour:
   m_SynchronizePosition: 1
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 1
-  m_UseLocal: 1
+  m_UseLocal: 0
 --- !u!114 &3370487820370996372
 MonoBehaviour:
   m_ObjectHideFlags: 0

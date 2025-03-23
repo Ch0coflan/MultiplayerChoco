@@ -1,17 +1,19 @@
 using UnityEngine;
-using UnityEngine.UI;
 
-public class P_NameCanvas : MonoBehaviour
+namespace Player
 {
-    public Canvas PlayerCanvas;
-
-    private void OnEnable()
+    public class P_NameCanvas : MonoBehaviour
     {
-        PlayerCanvas = GetComponentInChildren<Canvas>();
-    }
+        public Canvas PlayerCanvas;
 
-    private void Update()
-    {
-        PlayerCanvas.transform.rotation = Quaternion.identity;
+        private void OnEnable()
+        {
+            PlayerCanvas = GetComponentInChildren<Canvas>();
+        }
+
+        private void Update()
+        {
+            PlayerCanvas.transform.rotation = Quaternion.identity;
+        }
     }
 }

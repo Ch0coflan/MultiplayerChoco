@@ -1,62 +1,94 @@
-using UnityEngine;
+using System.Collections.Generic;
 using Photon.Pun;
+using UnityEngine;
+using UnityEngine.Serialization;
 
-[RequireComponent(typeof(Rigidbody))]
-public class P_Movement : MonoBehaviourPunCallbacks
+namespace Player
 {
-    [SerializeField] private float speed = 5f;
-    [SerializeField] private float jumpForce = 6f;
-    private Rigidbody _rb;
-    private Transform playerTransform; 
-    private Vector3 moveDirection;
-    private Vector3 networkPosition;
+    [RequireComponent(typeof(Rigidbody))]
+    public class P_Movement : MonoBehaviourPun, IPunObservable
+    {
+        [SerializeField] private float speed = 5f;
+        [SerializeField] private float jumpForce = 6f;
+        private Rigidbody _rb;
+        private Transform _playerTransform; 
+        private Vector3 _moveDirection;
+        private Vector3 _networkPosition;
+        private Quaternion _networkRotation;
+      
+       void Awake()
+       {
+           _rb = GetComponent<Rigidbody>();
+           _playerTransform = GetComponent<Transform>();
+       }
 
-    void Awake()
-    {
-        _rb = GetComponent<Rigidbody>();
-        playerTransform = GetComponent<Transform>();
-    }
-    private void Start()
-    {
-        if(!photonView.IsMine)
+       private void Start()
         {
-            GetComponent<P_Movement>().enabled = false;
-        }
-    }
-    void Update()
-    {
-        if(photonView.IsMine)
-        {
-            InputMovement();
-            Move();
-            if (moveDirection.y >= 1)
+            if(!photonView.IsMine)
             {
-                Fly();
-            }
-            if(moveDirection.x >= 1)
-            {
-                playerTransform.rotation = Quaternion.Euler(0,90,0);
-            }else if(moveDirection.x <= -1 )
-            {
-                playerTransform.rotation = Quaternion.Euler(0, 270, 0);
+                GetComponent<P_Movement>().enabled = false;
             }
         }
-    }
+        void Update()
+        {
+            if (!photonView.IsMine)
+            {
+                return;
+            }
+            if(photonView.IsMine)
+            {
+                InputMovement();
+                Move();
+                if (_moveDirection.y >= 1)
+                {
+                    Fly();
+                }
+                if(_moveDirection.x >= 1)
+                {
+                    _playerTransform.rotation = Quaternion.Euler(0,90,0);
+                }else if(_moveDirection.x <= -1 )
+                {
+                    _playerTransform.rotation = Quaternion.Euler(0, 270, 0);
+                }
+                
+            }
+            else
+            {
+                _rb.position = Vector3.Lerp(_rb.position, _networkPosition, Time.deltaTime * 5);
+                _rb.rotation = Quaternion.Lerp(_rb.rotation, _networkRotation, Time.deltaTime * 5);
+            }
+        }
 
-    private void InputMovement()
-    {
-        moveDirection.x = Input.GetAxisRaw("Horizontal");
-        moveDirection.y = Input.GetAxisRaw("Jump");
-        moveDirection *= speed;
-    }
+        private void InputMovement()
+        {
+            _moveDirection.x = Input.GetAxisRaw("Horizontal");
+            _moveDirection.y = Input.GetAxisRaw("Jump");
+            _moveDirection *= speed;
+        }
 
-    private void Move()
-    {
-        _rb.linearVelocity = new Vector3(moveDirection.x, _rb.linearVelocity.y,0);
-    }
+        private void Move()
+        {
+            _rb.linearVelocity = new Vector3(_moveDirection.x, _rb.linearVelocity.y,0);
+        }
 
-    private void Fly()
-    {
-        _rb.AddForce(transform.up * jumpForce);
+        private void Fly()
+        {
+            _rb.AddForce(transform.up * jumpForce);
+        }
+        
+        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+        {
+            if (stream.IsWriting)
+            {
+                stream.SendNext(_rb.position);
+                stream.SendNext(_rb.rotation);
+            }
+            else
+            {
+                _networkPosition = (Vector3) stream.ReceiveNext();
+                _networkRotation = (Quaternion) stream.ReceiveNext();
+            }
+        }
+        
     }
 }

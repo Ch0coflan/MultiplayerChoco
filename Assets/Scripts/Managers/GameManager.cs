@@ -1,62 +1,87 @@
+using System;
 using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using Random = UnityEngine.Random;
 
-public class GameManager : MonoBehaviour
+namespace Managers
 {
-    public static GameManager instance;
-    public GameObject playerPrefab;
-    public Transform[] spawnPoints;
-   /* public bool IsGameStarted()
+    public class GameManager : MonoBehaviourPunCallbacks
     {
-        return isGameStarted;
-    }*/
-
-    private void Awake()
-    {
-        if (instance != null)
+        public static GameManager Instance;
+        public GameObject playerPrefab;
+        public Transform[] spawnPoints;
+        public GameObject loadingScreen;
+        [SerializeField] private bool IsAllPlayersReady = false;
+        private void Awake()
         {
-            Destroy(gameObject);
+            if (Instance != null)
+            {
+                Destroy(gameObject);
+            }
+            else
+            {
+                Instance = this;
+            }
         }
-        else
+
+
+        private void Start()
         {
-            instance = this;
+            if (PhotonNetwork.IsConnected)
+            {
+                loadingScreen.SetActive(true);
+                Debug.Log("Nuevo jugador conectado: " + PhotonNetwork.LocalPlayer.NickName);
+            }
         }
-    }
 
-    void Start()
-    {
-         if (PhotonNetwork.IsMasterClient)
+        private void Update()
         {
-           
+            if (PhotonNetwork.IsMasterClient && !IsAllPlayersReady)
+            {
+                CheckAllPlayersInScene();
+            }
         }
-         SpawnPlayers();
-    }
 
-    private void SpawnPlayers()
-    {
-        int spawnIndex = Random.Range(0, spawnPoints.Length);
-        PhotonNetwork.Instantiate(playerPrefab.name, spawnPoints[spawnIndex].position, Quaternion.identity);
-    }
-
-    /*private bool isGameStarted = false;
-
-    // Método para iniciar la partida
-    public void StartGame()
-    {
-        if (PhotonNetwork.IsMasterClient && !isGameStarted)
+        public override void OnJoinedRoom()
         {
-            photonView.RPC("StartGameRPC", RpcTarget.All);  // Llama al RPC para que todos los jugadores inicien el juego
-            isGameStarted = true;  // Cambia el estado local
+            base.OnJoinedRoom();
+            Debug.Log("Jugador unido a la sala: " + PhotonNetwork.CurrentRoom.Name);
+            PhotonNetwork.LoadLevel(1);
         }
-    }
+        private void CheckAllPlayersInScene()
+        {
+            if (PhotonNetwork.PlayerList.Length == PhotonNetwork.CurrentRoom.PlayerCount)
+            {
+                Debug.Log("Todos los jugadores estÃ¡n en la escena.");
+                IsAllPlayersReady = true;
+                StartGame();
+            }
+            else
+            {
+                Debug.Log("Esperando mÃ¡s jugadores para unirse...");
+            }
+        }
         
-    [PunRPC]
-    public void StartGameRPC()
-    {
-        isGameStarted = true;  
+        public void StartGame()
+        {
+            loadingScreen.SetActive(false);
+            Debug.Log("Starting game...");
+            photonView.RPC("SpawnPlayers", RpcTarget.All);
+        }
 
-        // Aquí puedes colocar la lógica que necesite ejecutarse cuando el juego comience, por ejemplo:
-        // Cargar la escena del juego, habilitar los controles, etc.
-        PhotonNetwork.LoadLevel("GameScene");  // Ejemplo para cargar la escena de juego
-    }*/
+        [PunRPC]
+        private void SpawnPlayers()
+        {
+            foreach (Photon.Realtime.Player player in PhotonNetwork.PlayerList)
+            {
+                if (player.IsLocal)
+                {
+                    PhotonNetwork.Instantiate(playerPrefab.name, spawnPoints[Random.Range(0, spawnPoints.Length)].position, Quaternion.identity);
+                }
+            }
+            loadingScreen.SetActive(false);
+        }
+    }
 }
