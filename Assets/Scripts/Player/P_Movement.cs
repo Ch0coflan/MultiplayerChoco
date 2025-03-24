@@ -29,35 +29,34 @@ namespace Player
                 GetComponent<P_Movement>().enabled = false;
             }
         }
+
         void Update()
         {
             if (!photonView.IsMine)
             {
-                return;
-            }
-            if(photonView.IsMine)
-            {
-                InputMovement();
-                Move();
-                if (_moveDirection.y >= 1)
-                {
-                    Fly();
-                }
-                if(_moveDirection.x >= 1)
-                {
-                    _playerTransform.rotation = Quaternion.Euler(0,90,0);
-                }else if(_moveDirection.x <= -1 )
-                {
-                    _playerTransform.rotation = Quaternion.Euler(0, 270, 0);
-                }
-                
-            }
-            else
-            {
                 _rb.position = Vector3.Lerp(_rb.position, _networkPosition, Time.deltaTime * 5);
                 _rb.rotation = Quaternion.Lerp(_rb.rotation, _networkRotation, Time.deltaTime * 5);
+                return;
             }
+
+            InputMovement();
+            Move();
+            if (_moveDirection.y >= 1)
+            {
+                Fly();
+            }
+
+            if (_moveDirection.x >= 1)
+            {
+                _playerTransform.rotation = Quaternion.Euler(0, 90, 0);
+            }
+            else if (_moveDirection.x <= -1)
+            {
+                _playerTransform.rotation = Quaternion.Euler(0, 270, 0);
+            }
+
         }
+
 
         private void InputMovement()
         {
@@ -68,7 +67,7 @@ namespace Player
 
         private void Move()
         {
-            _rb.linearVelocity = new Vector3(_moveDirection.x, _rb.linearVelocity.y,0);
+            _rb.MovePosition(_rb.position + new Vector3(_moveDirection.x, 0, 0) * Time.deltaTime);
         }
 
         private void Fly()

@@ -1135,7 +1135,7 @@ GameObject:
   - component: {fileID: 984466461}
   - component: {fileID: 984466466}
   m_Layer: 0
-  m_Name: WinPoint
+  m_Name: Door
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1245,7 +1245,7 @@ Transform:
   m_GameObject: {fileID: 984466460}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 35, y: 2.94, z: -7.52}
+  m_LocalPosition: {x: -19.14, y: 2.94, z: -7.52}
   m_LocalScale: {x: 4.043188, y: 6.0293, z: 0.7262174}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1260,7 +1260,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 984466460}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97c7a0691ca0646498c4d945d8c35420, type: 3}
+  m_Script: {fileID: 11500000, guid: 73d2ffb0755207d489c8093ad1b82213, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1150541027
@@ -1702,6 +1702,7 @@ GameObject:
   - component: {fileID: 1950006090}
   - component: {fileID: 1950006091}
   - component: {fileID: 1950006092}
+  - component: {fileID: 1950006094}
   - component: {fileID: 1950006093}
   m_Layer: 0
   m_Name: Managers
@@ -1777,6 +1778,18 @@ MonoBehaviour:
   sceneViewId: 1
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &1950006094
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1950006089}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97c7a0691ca0646498c4d945d8c35420, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2051145141
 GameObject:
   m_ObjectHideFlags: 0

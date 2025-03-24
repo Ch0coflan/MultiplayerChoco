@@ -138,7 +138,6 @@ GameObject:
   - component: {fileID: 3092593564373565629}
   - component: {fileID: 3370487820370996372}
   - component: {fileID: 7062672590291920114}
-  - component: {fileID: 5224688599041915549}
   m_Layer: 0
   m_Name: Pirobito1
   m_TagString: Player
@@ -333,20 +332,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73b336aa3af7ae049b5624c69442eabf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startPos: {fileID: 0}
+  startPos: {x: 0, y: 0, z: 0}
   player: {fileID: 0}
---- !u!114 &5224688599041915549
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3400211952615987220}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cfc863228fb94254980ad31a6b3dad94, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3682283915861911426
 GameObject:
   m_ObjectHideFlags: 0
@@ -529,7 +516,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Pirobito1
+  m_text: p1
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

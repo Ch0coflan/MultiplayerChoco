@@ -1,27 +1,24 @@
+using System;
+using Managers;
 using UnityEngine;
 
 namespace Player
 {
     public class P_Restart : MonoBehaviour
     {
-        public Transform startPos;
+        public Vector3 startPos;
         public GameObject player;
 
-        private void OnEnable()
+        private void Start()
         {
             player = this.gameObject;
-            EventManager.OnPlayerCollisionWithObstacle += RestartPlayer;
-        }
-        private void OnDisable()
-        {
-            EventManager.OnPlayerCollisionWithObstacle -= RestartPlayer;
+            startPos = transform.position;
         }
 
-    
-        private void RestartPlayer()
+        public void RestartPlayer()
         {
             Debug.Log("Reiniciando al player");
-            player.transform.position = startPos.position;
+            player.transform.position = startPos;
         }
     }
 }

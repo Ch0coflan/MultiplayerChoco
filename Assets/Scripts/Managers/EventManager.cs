@@ -1,30 +1,39 @@
-using ExitGames.Client.Photon;
 using System;
 using UnityEngine;
 
-public class EventManager : MonoBehaviour
+namespace Managers
 {
-    public static EventManager Instance;    
-    public static event Action OnPlayerCollisionWithObstacle;
-    public static event Action OnPlayerWin;
-
-    private void Awake()
+    public class EventManager : MonoBehaviour
     {
-        if (Instance != null)
+        public static EventManager Instance;    
+        public static event Action OnPlayerCollisionWithObstacle;
+        public static event Action OnPlayerWin;
+        public static event Action<GameObject> OnPlayerIsAtDoor;
+
+        private void Awake()
         {
-            Destroy(gameObject);
-        }else
-        {
-            Instance = this;
+            if (Instance != null)
+            {
+                Destroy(gameObject);
+            }else
+            {
+                Instance = this;
+            }
         }
-    }
-    public static void TriggerPlayerCollision()
-    {
-        OnPlayerCollisionWithObstacle?.Invoke();
-    }
+        public static void TriggerPlayerCollision()
+        {
+            OnPlayerCollisionWithObstacle?.Invoke();
+        }
 
-    public static void TriggerPlayerWin()
-    {
-        OnPlayerWin?.Invoke();
+        public static void TriggerPlayerWin()
+        {
+            OnPlayerWin?.Invoke();
+        }
+
+        public static void TriggerPlayerIsAtDoor(GameObject player)
+        {
+            OnPlayerIsAtDoor?.Invoke(player);
+        }
+    
     }
 }

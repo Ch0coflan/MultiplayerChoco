@@ -1,14 +1,18 @@
 using System;
+using Managers;
 using UnityEngine;
 
-public class ObstaclesTrigger : MonoBehaviour
+namespace Obstacles
 {
-    private void OnTriggerEnter(Collider other)
+    public class ObstaclesTrigger : MonoBehaviour
     {
-        if(other.gameObject.CompareTag("Player"))
+        private void OnTriggerEnter(Collider other)
         {
-            EventManager.TriggerPlayerCollision();
-            Debug.Log($"Colisionado con {name}");
+            if (other.gameObject.CompareTag("Player"))
+            {
+                EventManager.TriggerPlayerCollision();
+                Debug.Log($"Jugador {name} colisionando con obstaculo {this.gameObject.name}");
+            }
         }
     }
 }

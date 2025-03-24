@@ -1,13 +1,30 @@
+using System;
+using Managers;
 using UnityEngine;
 
-public class WinTrigger : MonoBehaviour
+namespace Obstacles
 {
-    private void OnTriggerEnter(Collider other)
+    public class WinManager : MonoBehaviour
     {
-        if(other.gameObject.CompareTag("Player"))
+        private bool _isGameWinned = false;
+   
+    private void OnEnable()
         {
-            EventManager.TriggerPlayerWin();
-            Debug.Log("Colisionando con lapuerta");
+            EventManager.OnPlayerWin += WinRequirementsCompleted;
+        }
+
+        private void OnDisable()
+        {
+            EventManager.OnPlayerWin -= WinRequirementsCompleted;
+        }
+
+        private void WinRequirementsCompleted()
+        {
+            _isGameWinned = true;
+            if (_isGameWinned)
+            {
+                Time.timeScale = 0;
+            }
         }
     }
 }
