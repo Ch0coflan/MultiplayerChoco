@@ -9,6 +9,16 @@ namespace Player
         public Vector3 startPos;
         public GameObject player;
 
+        private void OnEnable()
+        {
+            EventManager.OnPlayerCollisionWithObstacle += RestartPlayer;
+        }
+
+        private void OnDisable()
+        {
+            EventManager.OnPlayerCollisionWithObstacle -= RestartPlayer;
+        }
+
         private void Start()
         {
             player = this.gameObject;
